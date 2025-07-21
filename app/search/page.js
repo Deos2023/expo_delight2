@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import tourData from '../lib/tour-data';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,33 +18,31 @@ const flattenTours = () => {
   return allTours;
 };
 
-const SearchPage = () => {
-  const searchParams = useSearchParams();
+const SearchPage = ({ searchParams }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const initialQuery = searchParams?.get('query')?.toLowerCase() || '';
+  const initialQuery = searchParams?.query?.toLowerCase() || '';
   const [query, setQuery] = useState(initialQuery);
   const [filteredResults, setFilteredResults] = useState([]);
 
   useEffect(() => {
-    // Only run this effect on client side
-    if (typeof window !== 'undefined') {
-      setIsLoading(false);
-      const allTours = flattenTours();
-      const results = allTours.filter((tour) => {
-        return (
-          tour.name.toLowerCase().includes(initialQuery) ||
-          tour.district.toLowerCase().includes(initialQuery) ||
-          tour.location.toLowerCase().includes(initialQuery) ||
-          tour.country.toLowerCase().includes(initialQuery)
-        );
-      });
-      setFilteredResults(results);
-    }
+    setIsLoading(false);
+    const allTours = flattenTours();
+    const results = allTours.filter((tour) => {
+      return (
+        tour.name.toLowerCase().includes(initialQuery) ||
+        tour.district.toLowerCase().includes(initialQuery) ||
+        tour.location.toLowerCase().includes(initialQuery) ||
+        tour.country.toLowerCase().includes(initialQuery)
+      );
+    });
+    setFilteredResults(results);
   }, [initialQuery]);
 
   const handleSearch = (e) => {
     const input = e.target.value.toLowerCase();
     setQuery(input);
+    router.push(`/search?query=${encodeURIComponent(input)}`);
 
     const allTours = flattenTours();
     const results = allTours.filter((tour) => {
@@ -70,7 +68,7 @@ const SearchPage = () => {
   }
 
   return (
-     <div className="relative min-h-screen sm:pt-0 pt-24 overflow-hidden">
+    <div className="relative min-h-screen sm:pt-0 pt-24 overflow-hidden">
       {/* Fixed Background Video */}
       <video
         autoPlay
