@@ -8,7 +8,7 @@ const DomesticToursPage = () => {
   const domesticTours = tourData.national;
 
   return (
-    <div className="relative w-full min-h-screen text-white">
+    <div className="relative w-full sm:pt-0 pt-20 min-h-screen text-white">
       {/* Background Video Fixed */}
       <video
         autoPlay

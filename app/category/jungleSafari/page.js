@@ -8,7 +8,7 @@ const JungleSafariPage = () => {
   const jungleSafaris = tourData.jungle;
 
   return (
-    <div className="relative w-full min-h-screen text-white">
+    <div className="relative w-full min-h-screen sm:pt-0 pt-20 text-white">
       {/* Background Video Fixed */}
       <video
         autoPlay

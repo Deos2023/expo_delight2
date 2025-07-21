@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Menu,
   X,
@@ -16,11 +16,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import clsx from 'clsx';
 
+
 const navItems = [
   {
     label: 'Home',
-    path: '/',
     icon: Home,
+    path: '/',
   },
   {
     label: 'Destination',
@@ -39,14 +40,18 @@ const navItems = [
     ],
   },
   {
+    label: 'Categories',
+    icon: Layers,
+    submenu: [
+      { label: 'Domestic Tours', path: '/category/domestic' },
+      { label: 'International Tours', path: '/category/international' },
+      { label: 'Jungle Safaris', path: '/category/jungleSafari' },
+    ],
+  },
+  {
     label: 'Blog',
     icon: BookText,
     path: '/blog',
-  },
-  {
-    label: 'Elements',
-    icon: Layers,
-    path: '/elements',
   },
   {
     label: 'Pages',
@@ -67,13 +72,30 @@ const navItems = [
 const MobileNavbar = () => {
   const [open, setOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleDropdown = (label) => {
     setActiveDropdown((prev) => (prev === label ? null : label));
   };
 
   return (
-    <nav className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md px-4 py-2 flex items-center justify-between">
+    <nav className={clsx(
+      'lg:hidden fixed top-0 left-0 right-0 z-50 px-4 py-2 flex items-center justify-between transition-all duration-300',
+      scrolled ? 'bg-black/30 backdrop-blur-md' : 'bg-transparent'
+    )}>
       {/* Left: Hamburger */}
       <button
         className="text-white"

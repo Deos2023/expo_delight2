@@ -90,7 +90,7 @@ export default function HeroSection() {
             />
             <SliderSection 
               images={tourData.national.map(t => t.images[0])} 
-              label="National Tour" 
+              label="Domestic Tour" 
               direction="left" 
               bg="bg-blue-200" 
               delay={1}
