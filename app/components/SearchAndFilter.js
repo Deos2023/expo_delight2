@@ -1,3 +1,6 @@
+
+
+"use client"
 import { useState } from "react";
 import tourData from "../lib/tour-data"; // adjust path if needed
 
