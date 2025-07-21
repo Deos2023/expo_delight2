@@ -18,21 +18,26 @@ const flattenTours = () => {
 
 const SearchPage = () => {
   const searchParams = useSearchParams();
-  const initialQuery = searchParams.get('query')?.toLowerCase() || '';
+  const [isLoading, setIsLoading] = useState(true);
+  const initialQuery = searchParams?.get('query')?.toLowerCase() || '';
   const [query, setQuery] = useState(initialQuery);
   const [filteredResults, setFilteredResults] = useState([]);
 
   useEffect(() => {
-    const allTours = flattenTours();
-    const results = allTours.filter((tour) => {
-      return (
-        tour.name.toLowerCase().includes(initialQuery) ||
-        tour.district.toLowerCase().includes(initialQuery) ||
-        tour.location.toLowerCase().includes(initialQuery) ||
-        tour.country.toLowerCase().includes(initialQuery)
-      );
-    });
-    setFilteredResults(results);
+    // Only run this effect on client side
+    if (typeof window !== 'undefined') {
+      setIsLoading(false);
+      const allTours = flattenTours();
+      const results = allTours.filter((tour) => {
+        return (
+          tour.name.toLowerCase().includes(initialQuery) ||
+          tour.district.toLowerCase().includes(initialQuery) ||
+          tour.location.toLowerCase().includes(initialQuery) ||
+          tour.country.toLowerCase().includes(initialQuery)
+        );
+      });
+      setFilteredResults(results);
+    }
   }, [initialQuery]);
 
   const handleSearch = (e) => {
@@ -52,8 +57,18 @@ const SearchPage = () => {
     setFilteredResults(results);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <div className="text-center">
+          <p>Loading search results...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative min-h-screen overflow-hidden">
+     <div className="relative min-h-screen sm:pt-0 pt-24 overflow-hidden">
       {/* Fixed Background Video */}
       <video
         autoPlay
